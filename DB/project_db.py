@@ -19,7 +19,7 @@ login_details.insert_many([data1,data2,data3,data4,data5,data6,data7,data8])
 dept_details = db.department_table
 data1 = {'dept_id':'DEVBNG','hod_id':'2019DEV001','dept_name':'Development','total_employees':'30','min_employees':'17'}
 data2 = {'dept_id':'FINDEP','hod_id':'2019FIN001','dept_name':'Finance','total_employees':'25','min_employees':'14'}
-data3 = {'dept_id':'HRDEPT','hod_id':'2019HRM001','dept_name':'Human Resource','total_employees':'10','min_employees':'6'}
+data3 = {'dept_id':'HRDEPT','hod_id':'2019HRD001','dept_name':'Human Resource','total_employees':'10','min_employees':'6'}
 dept_details.insert_one([data1,data2,data3])
 
 #5.Calendar
