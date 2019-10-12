@@ -27,6 +27,7 @@ def update_calendar_info():
     department_details = db.department_table
     res = list(department_details.find({'dept_id':deptId}))
     if(len(res) == 0):
+        client.close()
         return jsonify({}),400
     calendar_details = db.calendar_table
     res = list(calendar_details.find({'dept_id':deptId,'e_type':eType}))
@@ -35,25 +36,27 @@ def update_calendar_info():
     med = request.json['medical']
     if(len(res) != 0):
         calendar_details.update_one({'dept_id':deptId,'e_type':eType},{"$set": {'casual':cas,'earned':ear,'medical':med}})
+        client.close()
         return jsonify({}),200
     data = {'dept_id':deptId,'e_type':eType,'casual':cas,'earned':ear,'medical':med}
     calendar_details.insert_one(data)
+    client.close()
     return jsonify({}),200
 
 #has to be changed
-@app.route('/login1',methods=['POST'])
+@app.route('/login',methods=['POST'])
 def check_login():
-    print("here")
-    usr = request.json["username"]
+    usr = request.json["user_name"]
     password = request.json["password"]
     client = MongoClient()
-    db = client['trial']
-    ld = db.login_details
-    res = ld.find({'username':usr})
+    db = client['employee_management_db']
+    ld = db.login_table
+    res = ld.find({'user_name':usr})
     for i in res:
-        if(i['username'] == usr and i['password'] == password):
+        if(i['user_name'] == usr and i['password'] == password):
+            client.close()
             return jsonify({}),200
-    return jsonify({}),400
     client.close()
+    return jsonify({}),400
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
