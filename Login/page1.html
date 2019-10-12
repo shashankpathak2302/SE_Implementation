@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title> Page1 </title>
+    </head>
+    <body onload = "init();">
+        <div id = "p1"></div>
+        <script>
+            function init()
+            {
+                var cookie = document.cookie;
+                var splitStr = cookie.split("=");
+                var p1_obj = document.getElementById("p1");
+                if(splitStr[1] == "nothing")
+                {
+                    var anch = document.createElement("a");
+                    anch.innerHTML = "Login";
+                    anch.setAttribute("href","login_with_flask.html");
+                    p1_obj.appendChild(anch);
+                }
+                else
+                {
+                    var p_obj = document.createElement("p");
+                    p_obj.innerHTML = splitStr[1];
+                    //var p1_obj = document.getElementById("p1");
+                    p1_obj.appendChild(p_obj);
+                    var btn = document.createElement("button");
+                    btn.innerHTML = "Logout";
+                    btn.setAttribute("onclick","logout()");
+                    p1_obj.appendChild(btn);
+                }
+            }
+            function logout()
+            {
+                //alert("Yet to be Implemented");
+                document.cookie = document.cookie = "username" + "=" + "nothing" + ";";
+                document.location.reload();
+            }
+        </script>
+    </body>
+</html>

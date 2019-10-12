@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title> Next Page </title>
+</head>
+<body>
+    <p>This is next page</p>
+    <button onclick="getCookies();">Get Cookie </button>
+    <button onclick="delCookie();">Delete Cookie </button>
+    <script>
+    function delCookie()
+    {
+        document.cookie = document.cookie = "username" + "=" + "nothing" + ";"
+        alert("Cookie is unset");
+    }
+    function getCookies()
+    {
+        var cookie = document.cookie;
+        var splitStr = cookie.split("=");
+        //alert(cookie);
+        if(splitStr[1] == "nothing")
+        {
+            alert("No cookie is set");
+        }
+        else
+        {
+            var splitStr = cookie.split("=");
+            alert(splitStr[1]);
+        }
+    }
+    </script>
+</body>
+</html>

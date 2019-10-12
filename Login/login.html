@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title> Login </title>
+</head>
+<body>
+    <input id = "userName"></input>
+    <br><br>
+    <button onclick="setCookie();"> Submit </button>
+    <button onclick="getCookies();">Get Cookie </button>
+    <button onclick="sendRequest();">Send Request</button><br><br>
+    <a href="nextPage.html">Click Here for next page </a>
+    <script>
+    function sendRequest()
+    {
+        var url = "http://127.0.0.1:5000/check";
+        req = new XMLHttpRequest();
+        req.open("GET", url, true);
+        req.setRequestHeader("Content-type", "application/json");
+        req.send(JSON.stringify({}));
+        req.onload = function ()
+        {
+            var data = JSON.parse(this.response);
+            alert(data["trial"]);
+        }
+    }
+    function setCookie()
+    {
+        var usr = document.getElementById("userName").value;
+        document.cookie = "username" + "=" + usr + ";"
+        alert("Cookie is set");
+    }
+    function getCookies()
+    {
+        var cookie = document.cookie;
+        var splitStr = cookie.split("=");
+        //alert(cookie);
+        if(splitStr[1] == "nothing")
+        {
+            alert("No cookie is set");
+        }
+        else
+        {
+            var splitStr = cookie.split("=");
+            alert(splitStr[1]);
+        }
+    }
+    </script>
+</body>
+</html>

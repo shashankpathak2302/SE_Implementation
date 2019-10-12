@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title> With Flask </title>
+    </head>
+    <body onload="init();">
+        <label> Username <input id = "username"></input></label>
+        <br> <br>
+        <label> Password <input id = "password" type="password"></input></label>
+        <br> <br>
+        <button onclick="validate();" id = "logbtn" >Login </button>
+        <div id = "div_ele">
+        <p id = "usr_block"></p>
+        </div>
+        <script>
+        function init()
+        {
+            document.cookie = document.cookie = "username" + "=" + "nothing" + ";"
+        }
+        function logout()
+        {
+            //alert("Yet to be Implemented");
+            document.cookie = document.cookie = "username" + "=" + "nothing" + ";";
+            document.location.reload();
+        }
+        function validate()
+        {
+            var usr = document.getElementById("username").value;
+            var pass = document.getElementById("password").value;
+            var d = {};
+            // alert(usr);
+            // alert(pass);
+            d["username"] = usr;
+            d["password"] = pass;
+            req = new XMLHttpRequest();
+            var url = "http://127.0.0.1:5000/login1";
+            req.open('POST',url,true);
+            req.setRequestHeader("Content-type", "application/json");
+            var data = JSON.stringify(d);
+            req.send(data);
+            req.onload = function()
+            {
+                //alert("Got something");
+                if(req.status == 200)
+                {
+                    var div_obj = document.getElementById("div_ele");
+                    var usr = document.getElementById("username").value;
+                    document.cookie = "username" + "=" + usr + ";"
+                    var par = document.getElementById("usr_block");
+                    par.innerHTML = usr;
+                    var anch = document.createElement("a");
+                    anch.innerHTML = "Page1";
+                    anch.setAttribute("href","page1.html");
+                    div_obj.appendChild(anch);
+                    var logbtn = document.getElementById("logbtn");
+                    logbtn.innerHTML = "Logout";
+                    logbtn.setAttribute("onclick","logout()");
+                }
+                else
+                {
+                    alert("Wrong Password");
+                }
+            }
+        }
+        </script>
+    </body>
+</html>
