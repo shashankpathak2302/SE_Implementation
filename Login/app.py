@@ -18,6 +18,28 @@ def trial_connection():
     trial_list["trial"] = "allOk";
     return jsonify(trial_list),200
 
+@app.route('/update_calendar',methods=['POST'])
+def update_calendar_info():
+    deptId = request.json["dept_id"]
+    eType = request.json["e_type"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    department_details = db.department_table
+    res = list(department_details.find({'dept_id':deptId}))
+    if(len(res) == 0):
+        return jsonify({}),400
+    calendar_details = db.calendar_table
+    res = list(calendar_details.find({'dept_id':deptId,'e_type':eType}))
+    cas = request.json['casual']
+    ear = request.json['earned']
+    med = request.json['medical']
+    if(len(res) != 0):
+        calendar_details.update_one({'dept_id':deptId,'e_type':eType},{"$set": {'casual':cas,'earned':ear,'medical':med}})
+        return jsonify({}),200
+    data = {'dept_id':deptId,'e_type':eType,'casual':cas,'earned':ear,'medical':med}
+    calendar_details.insert_one(data)
+    return jsonify({}),200
+
 @app.route('/login1',methods=['POST'])
 def check_login():
     print("here")
