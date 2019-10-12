@@ -13,7 +13,7 @@ data6 = {'e_id':'2019FIN003','user_name':'Alisha','password':'fb2471d9606c6e3c2a
 data7 = {'e_id':'2019HRD001','user_name':'Ayushi','password':'4f278cdddf52263fe21c64c94932f2b2ec316acecd39a7adcc01eb2e6592a678'}
 data8 = {'e_id':'2019HRD002','user_name':'Deepika','password':'27223c7bdb7362a30b4d84254bc6e555f9bf0467b9796f6e9d62e47633dc29b3'}
 data9 = {'e_id':'2019HRD002','user_name':'Purva','password':'a0e58d8fb7d8dd44330b1a55ba190043e931617546d6c06c4bef4c2e77331642'}
-login_details.insert_many([data1,data2,data3,data4,data5,data6,data7,data8])
+login_details.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
 
 #4.Deapartment
 dept_details = db.department_table
