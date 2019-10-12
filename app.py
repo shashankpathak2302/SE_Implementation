@@ -40,6 +40,7 @@ def update_calendar_info():
     calendar_details.insert_one(data)
     return jsonify({}),200
 
+#has to be changed
 @app.route('/login1',methods=['POST'])
 def check_login():
     print("here")
