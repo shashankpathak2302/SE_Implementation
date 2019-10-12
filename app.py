@@ -44,7 +44,7 @@ def update_calendar_info():
     return jsonify({}),200
 
 #has to be changed
-@app.route('/login',methods=['POST'])
+@app.route('/login',methods=['GET'])
 def check_login():
     usr = request.json["user_name"]
     password = request.json["password"]
