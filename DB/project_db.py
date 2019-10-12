@@ -20,7 +20,7 @@ dept_details = db.department_table
 data1 = {'dept_id':'DEVBNG','hod_id':'2019DEV001','dept_name':'Development','total_employees':'30','min_employees':'17'}
 data2 = {'dept_id':'FINDEP','hod_id':'2019FIN001','dept_name':'Finance','total_employees':'25','min_employees':'14'}
 data3 = {'dept_id':'HRDEPT','hod_id':'2019HRD001','dept_name':'Human Resource','total_employees':'10','min_employees':'7'}
-dept_details.insert_one([data1,data2,data3])
+dept_details.insert_many([data1,data2,data3])
 
 #5.Calendar
 calendar_details = db.calendar_table
@@ -55,7 +55,7 @@ data1 = {'e_id':'2019DEV003','type':'medical','list_of_dates':['29/10/2019','30/
 data2 = {'e_id':'2019DEV001','type':'casual','list_of_dates':['26/10/2019','28/10/2019','29/10/2019'],'reason':'casual leave','status':'pending'}
 data3 = {'e_id':'2019FIN002','type':'casual','list_of_dates':['2/11/2019'],'reason':'casual leave','status':'pending'}
 data4 = {'e_id':'2019HRD002','type':'medical','list_of_dates':['22/10/2019','23/10/2019','24/10/2019','25/10/2019'],'reason':'medical leave','status':'pending'}
-leave_col.insert_one([data1,data2,data3,data4])
+leave_col.insert_many([data1,data2,data3,data4])
 
 
 
