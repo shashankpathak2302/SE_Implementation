@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
 import re
+from datetime import date
 import pickle
 app = Flask(__name__)
 @app.after_request
@@ -43,7 +44,6 @@ def update_calendar_info():
     client.close()
     return jsonify({}),200
 
-#has to be changed
 @app.route('/login',methods=['GET'])
 def check_login():
     usr = request.json["user_name"]
@@ -58,5 +58,30 @@ def check_login():
             return jsonify({}),200
     client.close()
     return jsonify({}),400
+@app.route('/get_leaves/<string:deptId>',methods=['GET'])
+def get_leaves_date(deptId):
+    client = MongoClient()
+    db = client['employee_management_db']
+    contents_leave = db.leave_collection_table
+    res_leaves = list(contents_leave.find())
+    contents_emp = db.employee_details_table
+    leave_dict = dict()
+    today = date.today()
+    today_date = today.strftime("%d/%m/%Y")
+    for i in res_leaves:
+        if(i['status'] == "approved"):
+            emp_id = i['e_id']
+            emp_det = list(contents_emp.find({'e_id':emp_id}))
+            if(emp_det[0]['dept_id'] == deptId):
+                dates = i['list_of_dates']
+                for j in dates:
+                    if(j > today_date):
+                        if(j in leave_dict.keys()):
+                            leave_dict[j] = leave_dict[j] + 1
+                        else:
+                            leave_dict[j] = 1
+    client.close()
+    return jsonify(leave_dict),200
+
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
