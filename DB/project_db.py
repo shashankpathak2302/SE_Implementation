@@ -74,8 +74,9 @@ account_det.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
 salary_det=db.salary_detail_table
 data1={'e_id':'2019DEV002','last_salary_credited':'2/09/2019','reimbursed_amt':'2,500'}
 data2={'e_id':'2019FIN003','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000'}
-data1={'e_id':'2019DEV001','last_salary_credited':'2/09/2019','reimbursed_amt':'4,500'}
-data1={'e_id':'2019HRD001','last_salary_credited':'2/09/2019','reimbursed_amt':'8,000'}
+data3={'e_id':'2019DEV001','last_salary_credited':'2/09/2019','reimbursed_amt':'4,500'}
+data4={'e_id':'2019HRD001','last_salary_credited':'2/09/2019','reimbursed_amt':'8,000'}
+salary_det.insert_many([data1,data2,data3,data4])
 
 
 
