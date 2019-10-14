@@ -124,7 +124,7 @@ def approve_leave():
         return jsonify({'status':'rejected'}),200
     else:
         updated = str(int(empInfo[0]['leave_left'][lType]) - numberOfLeaves)
-        data = empInfo['leave_left']
+        data = empInfo[0]['leave_left']
         data[lType] = updated
         employee_details.update({'e_id':empId},{"$set": {'leave_left':data}})
         leave_col.update({'e_id':empId},{"$set": {'status':'approved'}})
