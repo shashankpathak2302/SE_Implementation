@@ -83,5 +83,28 @@ def get_leaves_date(deptId):
     client.close()
     return jsonify(leave_dict),200
 
+@app.route('/apply_leave',methods=['POST'])
+def apply_leave():
+    empId = request.json["e_id"]
+    lType = request.json["type"]
+    dates = request.json["list_of_dates"]
+    numberOfLeaves = len(dates)
+    reason = request.json["reason"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    employee_details = db.employee_details_table
+    leave_col = db.leave_collection_table
+    empInfo = list(employee_details.find({'e_id':empId}))
+    if(int(empInfo[0]['leave_left'][lType]) < numberOfLeaves):
+        data = {'e_id':empId,'type':lType,'list_of_dates':dates,'reason':reason,'status':'rejected'}
+        leave_col.insert_one(data)
+        client.close()
+        return jsonify({'status':'rejected'}),400
+    else:
+        data = {'e_id':empId,'type':lType,'list_of_dates':dates,'reason':reason,'status':'pending'}
+        leave_col.insert_one(data)
+        client.close()
+        return jsonify({'status':'pending'}),200
+        
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
