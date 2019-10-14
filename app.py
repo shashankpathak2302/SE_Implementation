@@ -105,6 +105,31 @@ def apply_leave():
         leave_col.insert_one(data)
         client.close()
         return jsonify({'status':'pending'}),200
+
+@app.route('/approve_leave',methods=['POST'])
+def approve_leave():
+    empId = request.json["e_id"]
+    lType = request.json["type"]
+    dates = request.json["list_of_dates"]
+    numberOfLeaves = len(dates)
+    status=request.json["status"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    employee_details = db.employee_details_table
+    leave_col = db.leave_collection_table
+    empInfo = list(employee_details.find({'e_id':empId}))
+    if(status=="REJECT"):
+        leave_col.update({'e_id':empId},{"$set": {'status':'rejected'}})
+        client.close()
+        return jsonify({'status':'rejected'}),200
+    else:
+        updated = str(int(empInfo[0]['leave_left'][lType]) - numberOfLeaves)
+        data = empInfo['leave_left']
+        data[lType] = updated
+        employee_details.update({'e_id':empId},{"$set": {'leave_left':data}})
+        leave_col.update({'e_id':empId},{"$set": {'status':'approved'}})
+        client.close()
+        return jsonify({'status':'approved'}),200
         
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
