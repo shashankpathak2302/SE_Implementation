@@ -1,9 +1,10 @@
-#app.py sandya
+#app.py
 from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
 import re
 from datetime import date
+import datetime
 import pickle
 app = Flask(__name__)
 @app.after_request
@@ -156,5 +157,62 @@ def initiate-salary-process(etypes):
     client.close()
     return jsonify({}),200
         
+@app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
+def get_applications(approver_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    salary_apps = db.leave_collection_table
+    res = list(salary_apps.find())
+    leave_applications = list()
+    for i in res:
+        e_id = i['e_id']
+        emp_db = db.employee_details_table
+        res = list(emp_db.find({'e_id':e_id}))
+        if(res[0]['approver_id'] == approver_id):
+            data = dict()
+            data['e_id'] = i['e_id']
+            data['type'] = i['type']
+            data['list_of_dates'] = i['list_of_dates']
+            data['reason'] = i['reason']
+            data['status'] = i['status']
+            leave_applications.append(data)
+    return jsonify(leave_applications),200
+
+@app.route('/get_bonus_status/<string:approver_id>',methods=['GET'])
+def get_bonus(approver_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    emp_details = db.employee_details_table
+    bonus_credited_det = db.salary_detail_table
+    res = list(emp_details.find())
+    now = datetime.datetime.now()
+    year = str(now.year)
+    applications = list()
+    for i in res:
+        res_bonus = bonus_credited_det.find({'e_id':i['e_id']})
+        if(i['approver_id'] == approver_id and (res_bonus[0]['last_bonus_credited'] == "" or res_bonus[0]['last_bonus_credited'].split('/')[2] != year)):
+            emp_det = dict()
+            emp_det['e_id'] = i['e_id']
+            emp_det['user_name'] = i['user_name']
+            emp_det['e_email'] = i['e_email']
+            emp_det['e_contact'] = i['e_contact']
+            applications.append(emp_det)
+    client.close()
+    return jsonify(applications),200
+
+@app.route('/approve_bonus',methods=['POST'])
+def approvebonus():
+    e_id = request.json["e_id"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    sal_details = db.salary_detail_table
+    now = datetime.datetime.now()
+    day = str(now.day)
+    month = str(now.month)
+    year = str(now.year)
+    today_date = day + "/" + month + "/" + year
+    sal_details.update({'e_id':e_id},{"$set":{'last_bonus_credited':today_date}})
+    return jsonify({}),200
+  
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
