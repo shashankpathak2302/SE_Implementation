@@ -1,4 +1,4 @@
-#app.py saksham
+#app.py 
 from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
@@ -131,6 +131,54 @@ def approve_leave():
         leave_col.update({'e_id':empId},{"$set": {'status':'approved'}})
         client.close()
         return jsonify({'status':'approved'}),200
-        
+
+@app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
+def get_applications(approver_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    salary_apps = db.leave_collection_table
+    res = list(salary_apps.find())
+    leave_applications = list()
+    for i in res:
+        e_id = i['e_id']
+        emp_db = db.employee_details_table
+        res = list(emp_db.find({'e_id':e_id}))
+        if(res[0]['approver_id'] == approver_id):
+            data = dict()
+            data['e_id'] = i['e_id']
+            data['type'] = i['type']
+            data['list_of_dates'] = i['list_of_dates']
+            data['reason'] = i['reason']
+            data['status'] = i['status']
+            leave_applications.append(data)
+    return jsonify(leave_applications),200
+
+@app.route('/get_bonus_status/<string:approver_id>',methods=['GET'])
+def get_bonus(approver_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    emp_details = db.employee_details_table
+    res = list(emp_details.find())
+    applications = list()
+    for i in res:
+        if(i['approver_id'] == approver_id and i['Bonus_Status'] == 'False'):
+            emp_det = dict()
+            emp_det['e_id'] = i['e_id']
+            emp_det['user_name'] = i['user_name']
+            emp_det['e_email'] = i['e_email']
+            emp_det['e_contact'] = i['e_contact']
+            applications.append(emp_det)
+    client.close()
+    return jsonify(applications),200
+
+@app.route('/approve_bonus',methods=['POST'])
+def approvebonus():
+    e_id = request.json["e_id"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    emp_details = db.employee_details_table
+    emp_details.update({'e_id':e_id},{"$set":{'Bonus_Status':"True"}})
+    return jsonify({}),200
+
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
