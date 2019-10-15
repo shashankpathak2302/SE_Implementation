@@ -60,14 +60,14 @@ leave_col.insert_many([data1,data2,data3,data4])
 #6.Account Department
 account_det=db.account_department_table
 data1={'e_type':'DEV','Salary':'60,000','Bonus':'1,08,000'}
-data2{'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
-data3{'e_type':'HOD','Salary':'1,20,0000','Bonus':'2,16,000'}
-data4{'e_type':'ACCOUNTANT','Salary':'65,000','Bonus':'1,17,000'}
-data5{'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
-data6{'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
-data7{'e_type':'HR','Salary':'70,000','Bonus':'1,26,000'}
-data8{'e_type':'HR MANAGER','Salary':'90,000','Bonus':'1,62,000'}
-data9{'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
+data2={'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data3={'e_type':'HOD','Salary':'1,20,0000','Bonus':'2,16,000'}
+data4={'e_type':'ACCOUNTANT','Salary':'65,000','Bonus':'1,17,000'}
+data5={'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data6={'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
+data7={'e_type':'HR','Salary':'70,000','Bonus':'1,26,000'}
+data8={'e_type':'HR MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data9={'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
 account_det.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
 
 #7.Salary
