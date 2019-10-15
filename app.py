@@ -1,4 +1,4 @@
-#app.py pathak
+#app.py 
 from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
@@ -131,6 +131,27 @@ def approve_leave():
         leave_col.update({'e_id':empId},{"$set": {'status':'approved'}})
         client.close()
         return jsonify({'status':'approved'}),200
+
+@app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
+def get_applications(approver_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    salary_apps = db.leave_collection_table
+    res = list(salary_apps.find())
+    leave_applications = list()
+    for i in res:
+        e_id = i['e_id']
+        emp_db = db.employee_details_table
+        res = list(emp_db.find({'e_id':e_id}))
+        if(res[0]['approver_id'] == approver_id):
+            data = dict()
+            data['e_id'] = i['e_id']
+            data['type'] = i['type']
+            data['list_of_dates'] = i['list_of_dates']
+            data['reason'] = i['reason']
+            data['status'] = i['status']
+            leave_applications.append(data)
+    return jsonify(leave_applications),200
         
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
