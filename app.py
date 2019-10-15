@@ -131,6 +131,30 @@ def approve_leave():
         leave_col.update({'e_id':empId},{"$set": {'status':'approved'}})
         client.close()
         return jsonify({'status':'approved'}),200
+
+#Part 1 of initiate-salary-process which returns the json of e-types to the frontend
+@app.route('/display_etypes',methods=['GET'])
+def display_etypes:
+	client = MongoClient()
+	db = client['employee_management_db']
+	res = db["e_type"]
+	client.close()
+	return jsonify(res),200
+
+#Part 2 of initiate-salary-process which takes in selected e-types and updates credited date for every employee in selected type
+@app.route('/initiate-salary-process',methods=['POST'])
+def initiate-salary-process(etypes):
+	client = MongoClient()
+	db = client['employee_management_db']
+	today = date.today()
+	employees = db.employee_collection_table
+	for e in etypes:
+		emps = employees.find({'e_type':e})
+		for i in emps:
+            record = db.salary_detail_table.find({'e_id':i})
+            record['last_salary_credited'] = today.strftime("%d/%m/%Y")
+    client.close()
+    return jsonify({}),200
         
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
