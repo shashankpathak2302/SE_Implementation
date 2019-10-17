@@ -148,14 +148,14 @@ def display_etypes():
 @app.route('/initiate-salary-process',methods=['POST'])
 def initiate_salary_process(etypes):
     client = MongoClient()
-	db = client['employee_management_db']
-	today = date.today()
-	employees = db.employee_collection_table
-	for e in etypes:
-		emps = employees.find({'e_type':e})
-        for i in emps:
-            record = db.salary_detail_table.find({'e_id':i})
-            record['last_salary_credited'] = today.strftime("%d/%m/%Y")
+    db = client['employee_management_db']
+    today = date.today()
+    employees = db.employee_collection_table
+    for e in etypes:
+        emps = employees.find({'e_type':e})
+    for i in emps:
+        record = db.salary_detail_table.find({'e_id':i})
+        record['last_salary_credited'] = today.strftime("%d/%m/%Y")
     client.close()
     return jsonify({}),200
 
