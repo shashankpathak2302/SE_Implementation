@@ -60,6 +60,8 @@ def check_login():
             return jsonify({}),200
     client.close()
     return jsonify({}),400
+
+
 @app.route('/get_leaves/<string:deptId>',methods=['GET'])
 def get_leaves_date(deptId):
     client = MongoClient()
@@ -135,7 +137,7 @@ def approve_leave():
 
 #Part 1 of initiate-salary-process which returns the json of e-types to the frontend
 @app.route('/display_etypes',methods=['GET'])
-def display_etypes:
+def display_etypes():
 	client = MongoClient()
 	db = client['employee_management_db']
 	res = db["e_type"]
@@ -144,19 +146,20 @@ def display_etypes:
 
 #Part 2 of initiate-salary-process which takes in selected e-types and updates credited date for every employee in selected type
 @app.route('/initiate-salary-process',methods=['POST'])
-def initiate-salary-process(etypes):
-	client = MongoClient()
+def initiate_salary_process(etypes):
+    client = MongoClient()
 	db = client['employee_management_db']
 	today = date.today()
 	employees = db.employee_collection_table
 	for e in etypes:
 		emps = employees.find({'e_type':e})
-		for i in emps:
+        for i in emps:
             record = db.salary_detail_table.find({'e_id':i})
             record['last_salary_credited'] = today.strftime("%d/%m/%Y")
     client.close()
     return jsonify({}),200
-        
+
+
 @app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
 def get_applications(approver_id):
     client = MongoClient()
@@ -213,6 +216,22 @@ def approvebonus():
     today_date = day + "/" + month + "/" + year
     sal_details.update({'e_id':e_id},{"$set":{'last_bonus_credited':today_date}})
     return jsonify({}),200
+
+@app.route('/check_salary_status',methods=['GET'])
+def check_salary_status():
+    client = MongoClient()
+    db = client['employee_management_db']
+    sal = db['salary_detail_table']
+    sal_month = sal['last_salary_credited'].split('/')[1]
+    today = date.today().strftime("%d/%m/%Y")
+    curr_month = today.split('/')[1]
+    if(curr_month==sal_month):
+        res="Credited"
+    else:
+        res="Pending"
+    client.close()
+    return jsonify(res),200
+
   
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
