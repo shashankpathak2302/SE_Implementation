@@ -57,6 +57,32 @@ data3 = {'e_id':'2019FIN002','type':'casual','list_of_dates':['2/11/2019'],'reas
 data4 = {'e_id':'2019HRD002','type':'medical','list_of_dates':['22/10/2019','23/10/2019','24/10/2019','25/10/2019'],'reason':'medical leave','status':'pending'}
 leave_col.insert_many([data1,data2,data3,data4])
 
+#6.Account Department
+account_det=db.account_department_table
+data1={'e_type':'DEV','Salary':'60,000','Bonus':'1,08,000'}
+data2={'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data3={'e_type':'HOD','Salary':'1,20,0000','Bonus':'2,16,000'}
+data4={'e_type':'ACCOUNTANT','Salary':'65,000','Bonus':'1,17,000'}
+data5={'e_type':'MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data6={'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
+data7={'e_type':'HR','Salary':'70,000','Bonus':'1,26,000'}
+data8={'e_type':'HR MANAGER','Salary':'90,000','Bonus':'1,62,000'}
+data9={'e_type':'HOD','Salary':'1,20,000','Bonus':'2,16,000'}
+account_det.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
+
+#7.Salary
+salary_det=db.salary_detail_table
+data1={'e_id':'2019DEV001','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+data2={'e_id':'2019DEV002','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+data3={'e_id':'2019DEV003','last_salary_credited':'2/09/2019','reimbursed_amt':'2,500','last_bonus_credited':""}
+data4={'e_id':'2019FIN001','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+data5={'e_id':'2019FIN002','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+data6={'e_id':'2019FIN003','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+data7={'e_id':'2019HRD001','last_salary_credited':'2/09/2019','reimbursed_amt':'4,500','last_bonus_credited':""}
+data8={'e_id':'2019HRD002','last_salary_credited':'2/09/2019','reimbursed_amt':'8,000','last_bonus_credited':""}
+data9={'e_id':'2019HRD003','last_salary_credited':'2/09/2019','reimbursed_amt':'6,000','last_bonus_credited':""}
+salary_det.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
+
 
 
 
