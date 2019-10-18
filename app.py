@@ -234,6 +234,16 @@ def check_salary_status(eid):
         res=["Pending"]
     client.close()
     return jsonify(res),200
-  
+
+@app.route('/update_salary_bonus',methods=['POST'])
+def update_sb():
+    etype = request.json['e_type']
+    salary = request.json['Salary']
+    bonus = request.json['Bonus']
+    client = MongoClient()
+    db = client['employee_management_db']
+    det = db.account_department_table
+    det.update({'e_type':etype},{"$set":{'Salary':salary,'Bonus':bonus}})
+    return jsonify({}),200
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
