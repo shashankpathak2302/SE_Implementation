@@ -136,29 +136,31 @@ def approve_leave():
         return jsonify({'status':'approved'}),200
 
 #Part 1 of initiate-salary-process which returns the json of e-types to the frontend
-@app.route('/display_etypes',methods=['GET'])
+@app.route('/display_etypes',methods=['GET']) 
 def display_etypes():
-	client = MongoClient()
-	db = client['employee_management_db']
-	res = db["e_type"]
-	client.close()
-	return jsonify(res),200
+    client = MongoClient()
+    db = client['employee_management_db']
+    contents = db.account_department_table
+    res = list(contents.find())
+    etype_list = []
+    for i in res:
+        etype_list.append(i['e_type'])
+    client.close()
+    return jsonify(etype_list),200
 
 #Part 2 of initiate-salary-process which takes in selected e-types and updates credited date for every employee in selected type
-@app.route('/initiate-salary-process',methods=['POST'])
-def initiate_salary_process(etypes):
+@app.route('/initiate-salary-process/<string:etype>',methods=['POST'])
+def initiate_salary_process(etype):
     client = MongoClient()
     db = client['employee_management_db']
     today = date.today()
-    employees = db.employee_collection_table
-    for e in etypes:
-        emps = employees.find({'e_type':e})
+    employees = db.employee_details_table
+    salary_info = db.salary_detail_table
+    emps = list(employees.find({'e_type':etype}))
     for i in emps:
-        record = db.salary_detail_table.find({'e_id':i})
-        record['last_salary_credited'] = today.strftime("%d/%m/%Y")
+        salary_info.update({'e_id':i['e_id']},{"$set":{'last_salary_credited':today.strftime("%d/%m/%Y")}})
     client.close()
     return jsonify({}),200
-
 
 @app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
 def get_applications(approver_id):
@@ -217,8 +219,8 @@ def approvebonus():
     sal_details.update({'e_id':e_id},{"$set":{'last_bonus_credited':today_date}})
     return jsonify({}),200
 
-@app.route('/check_salary_status',methods=['GET'])
-def check_salary_status():
+@app.route('/check_salary_status',methods=['GET']) #to be checked
+def check_salary_status(): 
     client = MongoClient()
     db = client['employee_management_db']
     sal = db['salary_detail_table']
