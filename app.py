@@ -1,4 +1,21 @@
 #app.py
+
+"""
+1. @app.route('/update_calendar',methods=['POST'])
+2. @app.route('/login',methods=['POST'])
+3. @app.route('/register',methods=['POST'])
+4. @app.route('/get_leaves/<string:deptId>',methods=['GET'])
+5. @app.route('/apply_leave',methods=['POST'])
+6. @app.route('/approve_leave',methods=['POST'])
+7. @app.route('/display_etypes',methods=['GET'])
+8. @app.route('/initiate-salary-process',methods=['POST'])
+9. @app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
+10. @app.route('/get_bonus_status/<string:approver_id>',methods=['GET'])
+11. @app.route('/approve_bonus',methods=['POST'])
+12. @app.route('/check_salary_status',methods=['GET'])
+
+"""
+
 from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
@@ -53,9 +70,9 @@ def update_calendar_info():
 
 
 # Login API - finds the record of the user in the table
-# if user does not exist ?
-# if password is wrong ?
-@app.route('/login',methods=['GET'])
+# if user does not exist - 403
+# if password is wrong - 401
+@app.route('/login',methods=['POST'])
 def check_login():
     usr = request.json["user_name"]
     password = request.json["password"]
@@ -74,6 +91,7 @@ def check_login():
         client.close()
         return jsonify({}),200
 
+# if 400 returned redirect to /login page
 @app.route('/register',methods=['POST'])
 def register():
     usr = request.json["user_name"]
