@@ -82,17 +82,21 @@ def check_login():
     client = MongoClient()
     db = client['employee_management_db']
     ld = db.login_table
-    res = ld.find({'user_name':usr})
+    res = list(ld.find({'user_name':usr}))
+    d = dict()
     if(len(res)==0):
         #User not registered
         client.close()
-        return jsonify({}),403
-    elif(res['user_name'] == usr and res['password']!=password):
+        d["e_id"] = ""
+        return jsonify(d),403
+    elif(res[0]['user_name'] == usr and res[0]['password']!=password):
         #Password wrong
-        return jsonify({}),401
+        d["e_id"] = ""
+        return jsonify(d),401
     else:
         client.close()
-        return jsonify({}),200
+        d["e_id"] = res[0]["e_id"]
+        return jsonify(d),200
 
 # Still has to fixed(Ignore for now)
 # if 400 returned redirect to /login page
