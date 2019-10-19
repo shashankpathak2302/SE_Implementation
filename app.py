@@ -1,4 +1,21 @@
 #app.py
+
+"""
+1. @app.route('/update_calendar',methods=['POST'])
+2. @app.route('/login',methods=['POST'])
+3. @app.route('/register',methods=['POST'])
+4. @app.route('/get_leaves/<string:deptId>',methods=['GET'])
+5. @app.route('/apply_leave',methods=['POST'])
+6. @app.route('/approve_leave',methods=['POST'])
+7. @app.route('/display_etypes',methods=['GET'])
+8. @app.route('/initiate-salary-process',methods=['POST'])
+9. @app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
+10. @app.route('/get_bonus_status/<string:approver_id>',methods=['GET'])
+11. @app.route('/approve_bonus',methods=['POST'])
+12. @app.route('/check_salary_status',methods=['GET'])
+
+"""
+
 from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 import requests
@@ -21,6 +38,10 @@ def trial_connection():
     trial_list["trial"] = "allOk";
     return jsonify(trial_list),200
 
+
+# dept_Id,eType,cas,ear,med sent as json object from frontend
+# Find the corresponding record and update the row
+# if record doesn't exist then create a new record and insert it
 @app.route('/update_calendar',methods=['POST'])
 def update_calendar_info():
     deptId = request.json["dept_id"]
@@ -29,6 +50,7 @@ def update_calendar_info():
     db = client['employee_management_db']
     department_details = db.department_table
     res = list(department_details.find({'dept_id':deptId}))
+    # if department id not in the department details table then it is an invalid request
     if(len(res) == 0):
         client.close()
         return jsonify({}),400
@@ -46,7 +68,11 @@ def update_calendar_info():
     client.close()
     return jsonify({}),200
 
-@app.route('/login',methods=['GET'])
+
+# Login API - finds the record of the user in the table
+# if user does not exist - 403
+# if password is wrong - 401
+@app.route('/login',methods=['POST'])
 def check_login():
     usr = request.json["user_name"]
     password = request.json["password"]
@@ -54,13 +80,33 @@ def check_login():
     db = client['employee_management_db']
     ld = db.login_table
     res = ld.find({'user_name':usr})
-    for i in res:
-        if(i['user_name'] == usr and i['password'] == password):
-            client.close()
-            return jsonify({}),200
+    if(len(res)==0):
+        #User not registered
+        client.close()
+        return jsonify({}),403
+    elif(res['user_name'] == usr and res['password']!=password):
+        #Password wrong
+        return jsonify({}),401
+    else:
+        client.close()
+        return jsonify({}),200
+
+# if 400 returned redirect to /login page
+@app.route('/register',methods=['POST'])
+def register():
+    usr = request.json["user_name"]
+    password = request.json["password"]
+    client = MongoClient()
+    db = client['employee_management_db']
+    user_in_table = db.login_table.find({'user_name':usr})
+    if(len(user_in_table)==0):
+        #generate e_id "id"
+        data = {'e_id':id,'user_name':usr,'password':password}
+        db.login_table.insert_one(data)
+        client.close()
+        return jsonify({}),200
     client.close()
     return jsonify({}),400
-
 
 @app.route('/get_leaves/<string:deptId>',methods=['GET'])
 def get_leaves_date(deptId):
