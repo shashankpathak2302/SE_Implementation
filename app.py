@@ -42,6 +42,8 @@ def trial_connection():
 # dept_Id,eType,cas,ear,med sent as json object from frontend
 # Find the corresponding record and update the row
 # if record doesn't exist then create a new record and insert it
+# Body of the request: {"dept_id": ,"e_type": ,"casual": ,"earned": ,"medical": }
+# Return: 
 @app.route('/update_calendar',methods=['POST'])
 def update_calendar_info():
     deptId = request.json["dept_id"]
@@ -70,6 +72,7 @@ def update_calendar_info():
 
 
 # Login API - finds the record of the user in the table
+# Input -> {"user_name": ,"password": }
 # if user does not exist - 403
 # if password is wrong - 401
 @app.route('/login',methods=['POST'])
@@ -91,6 +94,7 @@ def check_login():
         client.close()
         return jsonify({}),200
 
+# Still has to fixed(Ignore for now)
 # if 400 returned redirect to /login page
 @app.route('/register',methods=['POST'])
 def register():
@@ -108,6 +112,10 @@ def register():
     client.close()
     return jsonify({}),400
 
+# Takes deptID from frontend which is given in the url
+# Input -> http:/127.0.0.1/get_leaves/Department_ID
+# Output -> {"27/10/2019":"10","30/10/2019":"5"}
+# Output is dictionary containing key value pairs where key is date and value is number of employees on leave
 @app.route('/get_leaves/<string:deptId>',methods=['GET'])
 def get_leaves_date(deptId):
     client = MongoClient()
@@ -133,6 +141,10 @@ def get_leaves_date(deptId):
     client.close()
     return jsonify(leave_dict),200
 
+# Input -> {"e_id": ,"type": ,"list_of_dates": ,"reason": }
+# Output -> if number of leaves are exceeding the number of leaves left
+#           api will return {'status':'rejected'} with status code 400
+#           otherwise it will return {'status':'pending'} with status code 200
 @app.route('/apply_leave',methods=['POST'])
 def apply_leave():
     empId = request.json["e_id"]
@@ -156,6 +168,7 @@ def apply_leave():
         client.close()
         return jsonify({'status':'pending'}),200
 
+# Input -> {"e_id": ,"type": ,"list_of_dates": ,"status":"REJECT"/"APPROVE"}
 @app.route('/approve_leave',methods=['POST'])
 def approve_leave():
     empId = request.json["e_id"]
@@ -182,6 +195,8 @@ def approve_leave():
         return jsonify({'status':'approved'}),200
 
 #Part 1 of initiate-salary-process which returns the json of e-types to the frontend
+#Input nothing
+#Output -> ["DEV","HR",...]
 @app.route('/display_etypes',methods=['GET']) 
 def display_etypes():
     client = MongoClient()
@@ -195,6 +210,8 @@ def display_etypes():
     return jsonify(etype_list),200
 
 #Part 2 of initiate-salary-process which takes in selected e-types and updates credited date for every employee in selected type
+#Input is given through url:http://127.0.0.1:5000/initiate-salary-process/employee_type
+#Output is nothing,just a empty json with status 200
 @app.route('/initiate-salary-process/<string:etype>',methods=['POST'])
 def initiate_salary_process(etype):
     client = MongoClient()
@@ -208,6 +225,9 @@ def initiate_salary_process(etype):
     client.close()
     return jsonify({}),200
 
+# Input is given through url -> http://127.0.0.1:5000/get_leave_applications/approver_id
+# Output -> [{'e_id': ,'type': ,'list_of_dates': ,'reason': ,'status':"pending"/"rejected"/"approved"},...]
+# Its a list of dictionary,where each dictionary is a leave application
 @app.route('/get_leave_applications/<string:approver_id>',methods=['GET'])
 def get_applications(approver_id):
     client = MongoClient()
@@ -229,6 +249,9 @@ def get_applications(approver_id):
             leave_applications.append(data)
     return jsonify(leave_applications),200
 
+# This api returns all the employee under an approver who have not yet got bonus this year
+# Input to the api is given through url
+# Output will be [{"e_id": ,"user_name": ,"e_email": ,"e_contact": },...]
 @app.route('/get_bonus_status/<string:approver_id>',methods=['GET'])
 def get_bonus(approver_id):
     client = MongoClient()
@@ -251,6 +274,9 @@ def get_bonus(approver_id):
     client.close()
     return jsonify(applications),200
 
+# This is api is for approving the bonus
+# Input -> {"e_id": }
+# Output -> Updates the db and returns an empty json
 @app.route('/approve_bonus',methods=['POST'])
 def approvebonus():
     e_id = request.json["e_id"]
@@ -265,7 +291,10 @@ def approvebonus():
     sal_details.update({'e_id':e_id},{"$set":{'last_bonus_credited':today_date}})
     return jsonify({}),200
 
-@app.route('/check_salary_status/<string:eid>',methods=['GET']) #to be checked
+# This returns the current months salary status
+# Input is given through the url
+# Api checks the db and returns "credired"/"pending"
+@app.route('/check_salary_status/<string:eid>',methods=['GET'])
 def check_salary_status(eid): 
     client = MongoClient()
     db = client['employee_management_db']
@@ -281,6 +310,9 @@ def check_salary_status(eid):
     client.close()
     return jsonify(res),200
 
+# This api is used by account department to update the salary and bonus of a particular employee type
+# Input -> {"e_type": ,"Salary": ,"Bonus": } //make sure all the values are string
+# Output -> empty json string with return status 200
 @app.route('/update_salary_bonus',methods=['POST'])
 def update_sb():
     etype = request.json['e_type']
@@ -289,6 +321,11 @@ def update_sb():
     client = MongoClient()
     db = client['employee_management_db']
     det = db.account_department_table
+    res = list(det.find({'e_type':etype}))
+    if(len(res) == 0):
+        data = {'e_type':etype,'Salary':salary,'Bonus':bonus}
+        det.insert_one(data)
+        return jsonify({}),200
     det.update({'e_type':etype},{"$set":{'Salary':salary,'Bonus':bonus}})
     return jsonify({}),200
 if __name__ == '__main__':
