@@ -332,5 +332,45 @@ def update_sb():
         return jsonify({}),200
     det.update({'e_type':etype},{"$set":{'Salary':salary,'Bonus':bonus}})
     return jsonify({}),200
+
+# This api gives salary status for this month,bonus status of this month
+# Input -> given through url http://127.0.0.1:5000/empID
+#Output -> {"Salary": "1,20,0000", "bonus_amount": "2,16,000", "bonus_status": "false", "salary_status": "true"}
+@app.route('/display_salary/<string:empID>',methods=['GET'])
+def displaySalary(empID):
+    client = MongoClient()
+    db = client['employee_management_db']
+    account_det = db.salary_detail_table
+    res = list(account_det.find({'e_id':empID}))
+    bonus_credited_date = res[0]['last_bonus_credited']
+    if(bonus_credited_date != ""):
+        bonus_year = bonus_credited_date.split('/')[2]
+    else:
+        bonus_year = "1970"
+    salary_credited_date = res[0]['last_salary_credited']
+    now = datetime.datetime.now()
+    month = str(now.month)
+    year = str(now.year)
+    d = dict()
+    last_salary_list = salary_credited_date.split('/')
+    if(month == last_salary_list[1] and year == last_salary_list[2]):
+        d["salary_status"] = "true"
+    else:
+        d["salary_status"] = "false"
+    emp_det = db.employee_details_table
+    res = list(emp_det.find({'e_id':empID}))
+    emp_type = res[0]['e_type']
+    account_det = db.account_department_table
+    res = list(account_det.find({'e_type':emp_type}))
+    salary_amount = res[0]['Salary']
+    d["Salary"] = salary_amount
+    bonus_amount = res[0]['Bonus']
+    if(bonus_year == year):
+        d["bonus_status"] = "true"
+    else:
+        d["bonus_status"] = "false"
+    d["bonus_amount"] = bonus_amount
+    return jsonify(d),200
+
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
