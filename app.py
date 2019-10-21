@@ -111,7 +111,7 @@ def register():
     if(len(user_in_table)==0):
         #generate e_id "id"
         department = dept[0:3]
-        emps = list(db.employee_details_table.find({'dept_id':dept_id}))
+        emps = list(db.employee_details_table.find({'dept_id':dept}))
         emp_lis = []
         for i in emps:
             emp_lis.append(i['e_id'])
