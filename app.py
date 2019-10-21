@@ -98,17 +98,30 @@ def check_login():
         d["e_id"] = res[0]["e_id"]
         return jsonify(d),200
 
-# Still has to fixed(Ignore for now)
+
 # if 400 returned redirect to /login page
 @app.route('/register',methods=['POST'])
 def register():
     usr = request.json["user_name"]
     password = request.json["password"]
+    dept = request.json["dept_id"]
     client = MongoClient()
     db = client['employee_management_db']
-    user_in_table = db.login_table.find({'user_name':usr})
+    user_in_table = list(db.login_table.find({'user_name':usr}))
     if(len(user_in_table)==0):
         #generate e_id "id"
+        department = dept[0:3]
+        emps = list(db.employee_details_table.find({'dept_id':dept_id}))
+        emp_lis = []
+        for i in emps:
+            emp_lis.append(i['e_id'])
+
+        id_lis=[]
+        for i in emp_lis:
+            id_lis.append(int(i.split(department)[1]))
+        m = max(id_lis)+1
+        year = date.today().year
+        id = str(year)+department+str(m).zfill(3)
         data = {'e_id':id,'user_name':usr,'password':password}
         db.login_table.insert_one(data)
         client.close()
