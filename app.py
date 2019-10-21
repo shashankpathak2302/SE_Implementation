@@ -349,7 +349,7 @@ def update_sb():
     return jsonify({}),200
 
 
-@app.route('/get_dept_id<string:e_id>', methods=['GET'])   
+@app.route('/get_dept_id/<string:e_id>', methods=['GET'])   
 def get_dept_id(e_id):
     client = MongoClient()
     db = client['employee_management_db']
@@ -361,7 +361,7 @@ def get_dept_id(e_id):
     client.close()
     return jsonify(res[0]['dept_id']),200
 
-@app.route('/get_e_type<string:e_id>', methods=['GET'])   
+@app.route('/get_e_type/<string:e_id>', methods=['GET'])   
 def get_dept_id(e_id):
     client = MongoClient()
     db = client['employee_management_db']
