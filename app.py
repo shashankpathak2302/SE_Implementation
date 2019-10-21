@@ -342,8 +342,38 @@ def update_sb():
     if(len(res) == 0):
         data = {'e_type':etype,'Salary':salary,'Bonus':bonus}
         det.insert_one(data)
+        client.close()
         return jsonify({}),200
     det.update({'e_type':etype},{"$set":{'Salary':salary,'Bonus':bonus}})
+    client.close()
     return jsonify({}),200
+
+
+@app.route('/get_dept_id<string:e_id>', methods=['GET'])   
+def get_dept_id(e_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    emp = db.employee_details_table
+    res = list(emp.find({'e_id':e_id}))
+    if(len(res)==0):
+        client.close()
+        return jsonify({}),400
+    client.close()
+    return jsonify(res[0]['dept_id']),200
+
+@app.route('/get_e_type<string:e_id>', methods=['GET'])   
+def get_dept_id(e_id):
+    client = MongoClient()
+    db = client['employee_management_db']
+    emp = db.employee_details_table
+    res = list(emp.find({'e_id':e_id}))
+    if(len(res)==0):
+        client.close()
+        return jsonify({}),400
+    client.close()
+    return jsonify(res[0]['e_type']),200
+
+
+
 if __name__ == '__main__':
     app.run("0.0.0.0",port=5000)
