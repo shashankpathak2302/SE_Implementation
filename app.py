@@ -129,6 +129,36 @@ def register():
     client.close()
     return jsonify({}),400
 
+@app.route('/get_leave_data/<string:empId>',methods=['GET'])
+def get_leave_data(empId):
+    client = MongoClient()
+    db = client['employee_management_db']
+    employee_details = db.employee_details_table
+    empInfo = employee_details.find_one({'e_id':empId})
+    if(empInfo != None):
+        data = empInfo["leave_left"]
+        client.close()
+        # print(data)
+        return jsonify(data),200
+    else:
+        client.close()
+        return jsonify({'status':'Invalid employee id'}),400
+
+@app.route('/get_emp_details/<string:empId>',methods=['GET'])
+def get_emloyee_details(empId):
+    client = MongoClient()
+    db = client['employee_management_db']
+    employee_details = db.employee_details_table
+    empInfo = employee_details.find_one({'e_id':empId})
+    if(empInfo != None):
+        client.close()
+        del empInfo["_id"]
+        # print(empInfo)
+        return jsonify(empInfo),200
+    else:
+        client.close()
+        return jsonify({'status':'Invalid employee id'}),400
+
 # Takes deptID from frontend which is given in the url
 # Input -> http:/127.0.0.1/get_leaves/Department_ID
 # Output -> {"27/10/2019":"10","30/10/2019":"5"}
@@ -386,4 +416,4 @@ def displaySalary(empID):
     return jsonify(d),200
 
 if __name__ == '__main__':
-    app.run("0.0.0.0",port=5000)
+    app.run("0.0.0.0",port=5000,debug=True)
