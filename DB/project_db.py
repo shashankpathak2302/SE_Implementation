@@ -85,7 +85,7 @@ salary_det.insert_many([data1,data2,data3,data4,data5,data6,data7,data8,data9])
 
 
 8.Employee_cab_details
-emp_cab_det=db.cab_detail_table
+emp_cab_det=db.emp_cab_detail_table
 data =[{'e_id': '2019DEV001', 'location': (12.7502, 77.2129), 'distance': 0.44126279018289843, 'slope': 1.7240289069557067, 'login': 8, 'logout': 5, 'login_cab': '', 'logout_cab': ''},
  {'e_id': '2019DEV002', 'location': (12.8724, 77.908), 'distance': 0.32872511312645536, 'slope': -3.15927419354841, 'login': 8, 'logout': 5, 'login_cab': '', 'logout_cab': ''},
  {'e_id': '2019DEV003', 'location': (13.1456, 77.5775), 'distance': 0.17483823952442382, 'slope': -0.09827586206896137, 'login': 8, 'logout': 5, 'login_cab': '', 'logout_cab': ''},
@@ -178,7 +178,44 @@ data =[{'e_id': '2019DEV001', 'location': (12.7502, 77.2129), 'distance': 0.4412
  {'e_id': '2019HRD030', 'location': (13.0283, 77.5101), 'distance': 0.10176020833312431, 'slope': -1.4902998236332734, 'login': 8, 'logout': 5, 'login_cab': '', 'logout_cab': ''}];
 emp_cab_det.insert(data)
 
+9.Cab_Management
+cab_detail=db.cab_detail_table
+data=[{'cab_id': 'cab_0', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_1', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_2', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_3', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_4', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_5', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_6', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_7', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_8', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_9', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_10', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_11', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_12', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_13', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_14', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_15', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_16', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_17', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_18', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_19', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_20', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_21', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_22', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_23', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_24', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_25', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_26', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_27', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_28', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_29', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_30', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_31', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_32', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_33', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''},
+      {'cab_id': 'cab_34', 'pickup_order': '', 'passenger1': '', 'passenger2': '', 'passenger3': '', 'start_time': '', 'end_time': ''}];
+cab_detail.insert(data)
 
-
-
+      
 
